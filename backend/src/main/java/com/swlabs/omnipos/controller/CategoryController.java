@@ -24,17 +24,17 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(Long id) {
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
         return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity<Category> createCategory(Category category) {
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         return new ResponseEntity<>(categoryService.save(category), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(Long id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
