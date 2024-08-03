@@ -23,6 +23,11 @@ public class ItemController {
         return new ResponseEntity<>(itemService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Item>> getItemsByCategory(@PathVariable Long categoryId) {
+        return new ResponseEntity<>(itemService.findAllByCategory(categoryId), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItemById(@PathVariable Long id) {
         return new ResponseEntity<>(itemService.findById(id), HttpStatus.OK);

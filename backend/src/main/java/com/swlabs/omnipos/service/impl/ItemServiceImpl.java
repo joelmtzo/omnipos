@@ -35,4 +35,9 @@ public class ItemServiceImpl implements ItemService {
     public void deleteById(Long id) {
         itemRepository.deleteById(id);
     }
+
+    @Override
+    public List<Item> findAllByCategory(Long categoryId) {
+        return itemRepository.findByCategoryId(categoryId);
+    }
 }

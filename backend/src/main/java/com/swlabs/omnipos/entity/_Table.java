@@ -14,5 +14,7 @@ public class _Table {
     private Long id;
     private Integer number;
     private Long zoneId;
+    @Transient
+    private String zoneName;
     private String status;
 }
