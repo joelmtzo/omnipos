@@ -1,7 +1,6 @@
 import MenuItems from "./components/MenuItems";
 import OrderSummary from "./components/OrderSummary";
 import NavBar from "./components/NavBar";
-import "./App.css";
 import { useState } from "react";
 import { useEffect } from "react";
 import itemService from "./services/itemService";
@@ -33,11 +32,14 @@ function App() {
   const [selectedTable, setSelectedTable] = useState(null);
   const [tables, setTables] = useState([]);
 
+  // State to simulate the selected link
   const [selectedLink, setSelectedLink] = useState("Tables");
-
-  const loadInitialData = () => {
-    setSelectedTable(null);
-    setOrderItems([]);
+  
+  const loadInitialData = (resetSelectedOptions) => {
+    if(resetSelectedOptions) {
+      setSelectedTable(null);
+      setOrderItems([]);
+    }
 
     // Load initial data for items
     itemService.getAll().then((data) => {
@@ -65,7 +67,7 @@ function App() {
   }
 
   useEffect(() => {
-    loadInitialData();
+    loadInitialData(true);
   }, []);
 
   const handleCategoryClick = (id) => {
@@ -94,6 +96,10 @@ function App() {
       return [...prevOrderItems, { item, quantity: 1 }];
     });
   };
+
+  useEffect(() => {
+    calculateBill();
+  }, [orderItems]);
 
   const removeFromOrder = (item) => {
     const newOrderItems = orderItems.filter(
@@ -136,7 +142,7 @@ function App() {
   const showToast = (icon, title) => {
     Swal.mixin({
       toast: true,
-      position: "top-end",
+      position: "top",
       showConfirmButton: false,
       timer: 5000,
       timerProgressBar: true,
@@ -149,12 +155,11 @@ function App() {
   const handlePlaceOrder = () => {
     const order = {
       tableId: selectedTable,
-      startOrderDate: new Date(),
-      endOrderDate: new Date(),
       paymentMethod: "CASH",
       paymentNote: "",
       status: "PENDING",
-      total: 0,
+      subtotal: bill.subtotal,
+      total: bill.total,
       orderDetails: orderItems.map((item) => {
         return {
           itemId: item.item.id,
@@ -169,11 +174,10 @@ function App() {
     orderService.createOrder(order);
     showToast("success", "Order placed successfully for table " + selectedTable);
     setBill({ subtotal: 0, total: 0 });
-    loadInitialData();
+    setCheckoutOrCancel(true);
   };
 
   const handleTableClick = (table) => {
-    showToast("info", `Table ${table.id} selected`);
     setSelectedTable(table.id);
   }
 
@@ -191,7 +195,7 @@ function App() {
       if (result.isConfirmed) {
         orderService.checkout(selectedTable);
         showToast("success", "Checkout for table " + selectedTable + " completed");
-        loadInitialData();
+        setCheckoutOrCancel(true);
       }
     });
   }
@@ -210,7 +214,7 @@ function App() {
       if (result.isConfirmed) {
         orderService.cancelOrderForTable(selectedTable);
         showToast("success", "Order for table " + selectedTable + " canceled");
-        loadInitialData();
+        setCheckoutOrCancel(true);
       }
     });
   }
@@ -218,6 +222,13 @@ function App() {
   const handleSelectedLink = (link) => {
     setSelectedLink(link);
   }
+
+  const [checkoutOrCancel, setCheckoutOrCancel] = useState(false);
+
+  useEffect(() => {
+    loadInitialData(true);
+    setCheckoutOrCancel(false);
+  }, [checkoutOrCancel]);
 
   return (
     <div>
@@ -249,7 +260,7 @@ function App() {
 
           {selectedLink === "POS" && (
             <>
-              <div className="col-sm-8 col-md-6">
+              <div className="col-sm-8 col-md-6 animate__animated animate__fadeIn">
                 <OrderSummary
                   orderItems={orderItems}
                   bill={bill}
@@ -259,7 +270,7 @@ function App() {
                   selectedTable={selectedTable}
                 />
               </div>
-              <div className="col-sm-4 col-md-6">
+              <div className="col-sm-4 col-md-6 animate__animated animate__fadeIn">
                 <MenuItems
                   items={items}
                   categories={categories}
@@ -272,6 +283,12 @@ function App() {
           )}
         </div>
       </div>
+
+        <div className="fixed-bottom">
+          <footer className="bg-dark text-white text-center p-3">
+            <p className="small m-0">Restaurant POS System :: Powered by Shockwave Solutions</p>
+          </footer>
+        </div>
     </div>
   );
 }

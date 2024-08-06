@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080/";
+const API_BASE_URL = "http://posv3.test/api/";
 
 async function get(resource) {
     const response = await fetch(API_BASE_URL + resource);

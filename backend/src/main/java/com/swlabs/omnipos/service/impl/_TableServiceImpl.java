@@ -11,7 +11,6 @@ import java.util.List;
 
 @Service
 public class _TableServiceImpl implements _TableService {
-
     private final _TableRepository tableRepository;
     private final ZoneRepository zoneRepository;
 

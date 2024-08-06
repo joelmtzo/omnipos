@@ -2,18 +2,18 @@ import { React } from "react";
 
 const MenuItems = ({ items, categories, addToOrder, handleCategoryClick, selectedCategory }) => {
   
-  function formatCurrency(value) {
-    return "$ " + value.toFixed(2);
-  }
-
   return (
     <div>
-      <div className="menu-category">
+      <div className="d-flex flex-row flex-wrap mb-3">
         {categories &&
           categories.map((category) => (
             <button
               onClick={() => handleCategoryClick(category.id)}
-              className={category.id == selectedCategory ? "active" : ""}
+              className={`btn ${
+                selectedCategory === category.id
+                  ? "btn-success"
+                  : "btn-secondary"
+              } m-1 p-4 flex-grow-1`}
               key={category.id}
             >
               {category.name}
@@ -24,15 +24,21 @@ const MenuItems = ({ items, categories, addToOrder, handleCategoryClick, selecte
         {items &&
           items.map((item) => (
             <div
-              className="menu-item p-5 m-1"
+              className="btn btn-outline-secondary text-white p-4 m-1 flex-grow-1"
               onClick={() => addToOrder(item)}
               key={item.id}
             >
               {/* <img src={item.imageUrl} alt={item.name} /> */}
               <span>{item.name}</span>
-              <span>{formatCurrency(item.price)}</span>
+              <br />
+              <span>$ {item.price}</span>
             </div>
           ))}
+        {items.length === 0 && (
+          <div className="alert alert-secondary w-100 text-center">
+            No items available in this category
+          </div>
+        )}
       </div>
     </div>
   );

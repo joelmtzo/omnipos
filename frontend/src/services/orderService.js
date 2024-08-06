@@ -9,11 +9,11 @@ function getPendingOrders() {
 }
 
 function checkout(tableId) {
-    return dataService.get("orders/checkout/" + tableId);
+    return dataService.post("orders/checkout/" + tableId);
 }
 
 function cancelOrderForTable(tableId) {
-    return dataService.get("orders/cancel/" + tableId);
+    return dataService.post("orders/cancel/" + tableId);
 }
 
 export default { createOrder, getPendingOrders, checkout, cancelOrderForTable };

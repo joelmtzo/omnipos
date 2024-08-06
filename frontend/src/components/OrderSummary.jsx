@@ -6,10 +6,6 @@ const OrderSummary = ({
   handlePlaceOrder,
   selectedTable,
 }) => {
-  function formatCurrency(value) {
-    return "$ " + value.toFixed(2);
-  }
-
   return (
     <div>
       <div className="card order-summary">
@@ -32,37 +28,44 @@ const OrderSummary = ({
                 <th>Price</th>
                 <th>Qnt.</th>
                 <th>Total ($)</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {orderItems &&
                 orderItems.map((item) => (
-                  <tr key={item.item.id}>
+                  <tr
+                    className="animate__animated animate__fadeIn"
+                    key={item.item.id}
+                  >
                     <td className="col-4 align-middle">{item.item.name}</td>
                     <td className="col-2 align-middle">
-                      {formatCurrency(item.item.price)}
+                      {item.item.price}
                     </td>
                     <td className="col-3 align-middle">
                       <button
                         onClick={() => handleChangeQuantity(item, -1)}
-                        className="btn btn-secondary p-3 mx-3"
+                        className="btn btn-secondary"
                       >
                         -
                       </button>
-                      <span>{item.quantity}</span>
+                      <span className="mx-1">{item.quantity}</span>
                       <button
                         onClick={() => handleChangeQuantity(item, 1)}
-                        className="btn btn-secondary p-3 mx-3"
+                        className="btn btn-secondary"
                       >
                         +
                       </button>
                     </td>
                     <td className="align-middle">
                       <span>
-                        {formatCurrency(item.item.price * item.quantity)}
+                        {item.item.price * item.quantity}
                       </span>
+                    </td>
+                    <td className="align-middle">
+                      <button className="btn btn-secondary">Note</button>
                       <button
-                        className="btn btn-danger p-3 mx-3"
+                        className="btn btn-danger"
                         onClick={() => removeFromOrder(item)}
                       >
                         X
@@ -73,11 +76,11 @@ const OrderSummary = ({
             </tbody>
           </table>
           <div className="d-flex justify-content-between text-white">
-            <span>Sub total: {formatCurrency(bill.subtotal)}</span>
+            <span>Sub total: {bill.subtotal}</span>
             <span>Other Charge: 0.00</span>
           </div>
           <div className="d-flex justify-content-between mt-3 text-white">
-            <strong>Amount to Pay: {formatCurrency(bill.total)}</strong>
+            <strong>Amount to Pay: {bill.total}</strong>
           </div>
         </div>
         <div className="card-footer d-flex justify-content-between">
